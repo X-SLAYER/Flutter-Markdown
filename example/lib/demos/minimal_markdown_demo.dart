@@ -109,7 +109,7 @@ class MinimalMarkdownDemo extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return const Markdown(
+    return Markdown(
       data: _data,
     );
   }

@@ -101,6 +101,7 @@ class _BasicMarkdownDemoState extends State<BasicMarkdownDemo> {
                   data: snapshot.data!,
                   imageDirectory: 'https://raw.githubusercontent.com',
                   extensionSet: _extensionSet.value,
+                  language: 'dart',
                   onTapLink: (String text, String? href, String title) =>
                       linkOnTapHandler(context, text, href, title),
                 ),

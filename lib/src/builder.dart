@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/arta.dart';
 import 'package:flutter_highlight/themes/github.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -111,7 +108,8 @@ class MarkdownBuilder implements md.NodeVisitor {
     this.fitContent = false,
     this.onTapText,
     this.softLineBreak = false,
-    this.theme,
+    this.codeTheme = githubTheme,
+    this.language = 'dart',
   });
 
   /// A delegate that controls how link and `pre` elements behave.
@@ -157,7 +155,10 @@ class MarkdownBuilder implements md.NodeVisitor {
   final VoidCallback? onTapText;
 
   /// code blocks theme
-  final Map<String, TextStyle>? theme;
+  final Map<String, TextStyle> codeTheme;
+
+  /// code blocks theme
+  final String language;
 
   /// The soft line break is used to identify the spaces at the end of aline of
   /// text and the leading spaces in the immediately following the line of text.
@@ -331,16 +332,15 @@ class MarkdownBuilder implements md.NodeVisitor {
       child = builders[_blocks.last.tag!]!
           .visitText(text, styleSheet.styles[_blocks.last.tag!]);
     } else if (_blocks.last.tag == 'pre') {
-      log('message: ${text.text}');
       child = Scrollbar(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: styleSheet.codeblockPadding,
           child: HighlightView(
             text.text,
-            language: 'dart',
+            language: language,
             padding: styleSheet.codeblockPadding,
-            theme: githubTheme,
+            theme: codeTheme,
           ),
         ),
       );

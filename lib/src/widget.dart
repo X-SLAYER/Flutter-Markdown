@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_highlight/themes/github.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
@@ -168,6 +169,8 @@ abstract class MarkdownWidget extends StatefulWidget {
     this.listItemCrossAxisAlignment =
         MarkdownListItemCrossAxisAlignment.baseline,
     this.softLineBreak = false,
+    this.codeTheme = githubTheme,
+    this.language = 'language',
   }) : super(key: key);
 
   /// The Markdown to display.
@@ -221,6 +224,12 @@ abstract class MarkdownWidget extends StatefulWidget {
 
   /// Called when building a bullet
   final MarkdownBulletBuilder? bulletBuilder;
+
+  /// code blocks theme
+  final Map<String, TextStyle> codeTheme;
+
+  /// Language code
+  final String language;
 
   /// Render certain tags, usually used with [extensionSet]
   ///
@@ -336,6 +345,8 @@ class _MarkdownWidgetState extends State<MarkdownWidget>
       listItemCrossAxisAlignment: widget.listItemCrossAxisAlignment,
       onTapText: widget.onTapText,
       softLineBreak: widget.softLineBreak,
+      codeTheme: widget.codeTheme,
+      language: widget.language,
     );
 
     _children = builder.build(astNodes);
@@ -413,6 +424,8 @@ class MarkdownBody extends MarkdownWidget {
     this.shrinkWrap = true,
     bool fitContent = true,
     bool softLineBreak = false,
+    Map<String, TextStyle> codeTheme = githubTheme,
+    String language = 'dart',
   }) : super(
           key: key,
           data: data,
@@ -434,6 +447,8 @@ class MarkdownBody extends MarkdownWidget {
           bulletBuilder: bulletBuilder,
           fitContent: fitContent,
           softLineBreak: softLineBreak,
+          codeTheme: codeTheme,
+          language: language,
         );
 
   /// If [shrinkWrap] is `true`, [MarkdownBody] will take the minimum height
@@ -493,6 +508,8 @@ class Markdown extends MarkdownWidget {
     this.physics,
     this.shrinkWrap = false,
     bool softLineBreak = false,
+    Map<String, TextStyle> codeTheme = githubTheme,
+    String language = 'dart',
   }) : super(
           key: key,
           data: data,
@@ -513,6 +530,8 @@ class Markdown extends MarkdownWidget {
           listItemCrossAxisAlignment: listItemCrossAxisAlignment,
           bulletBuilder: bulletBuilder,
           softLineBreak: softLineBreak,
+          codeTheme: codeTheme,
+          language: language,
         );
 
   /// The amount of space by which to inset the children.
