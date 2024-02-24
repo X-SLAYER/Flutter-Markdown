@@ -110,7 +110,9 @@ class MarkdownBuilder implements md.NodeVisitor {
     this.onTapText,
     this.softLineBreak = false,
     this.codeTheme = githubTheme,
-    this.language = 'dart',
+    this.codeLanguage = 'dart',
+    this.showCodeCopyButton = true,
+    this.onCopyTrigger,
   });
 
   /// A delegate that controls how link and `pre` elements behave.
@@ -158,8 +160,14 @@ class MarkdownBuilder implements md.NodeVisitor {
   /// code blocks theme
   final Map<String, TextStyle> codeTheme;
 
-  /// code blocks theme
-  final String language;
+  /// code blocks language
+  final String codeLanguage;
+
+  /// Whether to show the copy button in code blocks
+  final bool showCodeCopyButton;
+
+  /// a callback to be called when the copy button is pressed
+  final ValueChanged<String>? onCopyTrigger;
 
   /// The soft line break is used to identify the spaces at the end of aline of
   /// text and the leading spaces in the immediately following the line of text.
@@ -333,27 +341,35 @@ class MarkdownBuilder implements md.NodeVisitor {
       child = builders[_blocks.last.tag!]!
           .visitText(text, styleSheet.styles[_blocks.last.tag!]);
     } else if (_blocks.last.tag == 'pre') {
-      child = Scrollbar(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: styleSheet.codeblockPadding,
-          child: Stack(
-            children: [
-              HighlightView(
+      child = Stack(
+        children: [
+          Scrollbar(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: styleSheet.codeblockPadding,
+              child: HighlightView(
                 text.text,
-                language: language,
+                language: codeLanguage,
                 padding: styleSheet.codeblockPadding,
                 theme: codeTheme,
               ),
-              IconButton(
+            ),
+          ),
+          if (showCodeCopyButton)
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
                 onPressed: () {
+                  if (onCopyTrigger != null) {
+                    onCopyTrigger!(text.text);
+                    return;
+                  }
                   Clipboard.setData(ClipboardData(text: text.text));
                 },
                 icon: Icon(Icons.copy),
               ),
-            ],
-          ),
-        ),
+            ),
+        ],
       );
     } else {
       child = _buildRichText(

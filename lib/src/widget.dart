@@ -170,7 +170,9 @@ abstract class MarkdownWidget extends StatefulWidget {
         MarkdownListItemCrossAxisAlignment.baseline,
     this.softLineBreak = false,
     this.codeTheme = githubTheme,
-    this.language = 'language',
+    this.codeLanguage = 'language',
+    this.showCodeCopyButton = true,
+    this.onCopyTrigger,
   }) : super(key: key);
 
   /// The Markdown to display.
@@ -229,7 +231,13 @@ abstract class MarkdownWidget extends StatefulWidget {
   final Map<String, TextStyle> codeTheme;
 
   /// Language code
-  final String language;
+  final String codeLanguage;
+
+  /// Whether to show the copy button on code blocks
+  final bool showCodeCopyButton;
+
+  /// Called when the copy button is triggered
+  final void Function(String)? onCopyTrigger;
 
   /// Render certain tags, usually used with [extensionSet]
   ///
@@ -346,7 +354,9 @@ class _MarkdownWidgetState extends State<MarkdownWidget>
       onTapText: widget.onTapText,
       softLineBreak: widget.softLineBreak,
       codeTheme: widget.codeTheme,
-      language: widget.language,
+      codeLanguage: widget.codeLanguage,
+      showCodeCopyButton: widget.showCodeCopyButton,
+      onCopyTrigger: widget.onCopyTrigger,
     );
 
     _children = builder.build(astNodes);
@@ -425,7 +435,9 @@ class MarkdownBody extends MarkdownWidget {
     bool fitContent = true,
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
-    String language = 'dart',
+    String codeLanguage = 'dart',
+    bool showCodeCopyButton = true,
+    ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
           data: data,
@@ -448,7 +460,9 @@ class MarkdownBody extends MarkdownWidget {
           fitContent: fitContent,
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
-          language: language,
+          codeLanguage: codeLanguage,
+          showCodeCopyButton: showCodeCopyButton,
+          onCopyTrigger: onCopyTrigger,
         );
 
   /// If [shrinkWrap] is `true`, [MarkdownBody] will take the minimum height
@@ -509,7 +523,9 @@ class Markdown extends MarkdownWidget {
     this.shrinkWrap = false,
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
-    String language = 'dart',
+    String codeLanguage = 'dart',
+    bool showCodeCopyButton = true,
+    ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
           data: data,
@@ -531,7 +547,9 @@ class Markdown extends MarkdownWidget {
           bulletBuilder: bulletBuilder,
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
-          language: language,
+          codeLanguage: codeLanguage,
+          showCodeCopyButton: showCodeCopyButton,
+          onCopyTrigger: onCopyTrigger,
         );
 
   /// The amount of space by which to inset the children.
