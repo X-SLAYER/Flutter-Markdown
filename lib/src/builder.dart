@@ -110,8 +110,8 @@ class MarkdownBuilder implements md.NodeVisitor {
     this.onTapText,
     this.softLineBreak = false,
     this.codeTheme = githubTheme,
-    this.language = 'dart',
-    required this.showCopyButton,
+    this.codeLanguage = 'dart',
+    this.showCodeCopyButton = true,
     this.onCopyTrigger,
   });
 
@@ -160,11 +160,11 @@ class MarkdownBuilder implements md.NodeVisitor {
   /// code blocks theme
   final Map<String, TextStyle> codeTheme;
 
-  /// code blocks theme
-  final String language;
+  /// code blocks language
+  final String codeLanguage;
 
   /// Whether to show the copy button in code blocks
-  final bool showCopyButton;
+  final bool showCodeCopyButton;
 
   /// a callback to be called when the copy button is pressed
   final ValueChanged<String>? onCopyTrigger;
@@ -349,13 +349,13 @@ class MarkdownBuilder implements md.NodeVisitor {
               padding: styleSheet.codeblockPadding,
               child: HighlightView(
                 text.text,
-                language: language,
+                language: codeLanguage,
                 padding: styleSheet.codeblockPadding,
                 theme: codeTheme,
               ),
             ),
           ),
-          if (!showCopyButton)
+          if (showCodeCopyButton)
             Align(
               alignment: Alignment.topRight,
               child: IconButton(

@@ -170,8 +170,8 @@ abstract class MarkdownWidget extends StatefulWidget {
         MarkdownListItemCrossAxisAlignment.baseline,
     this.softLineBreak = false,
     this.codeTheme = githubTheme,
-    this.language = 'language',
-    this.showCopyButton = true,
+    this.codeLanguage = 'language',
+    this.showCodeCopyButton = true,
     this.onCopyTrigger,
   }) : super(key: key);
 
@@ -231,10 +231,10 @@ abstract class MarkdownWidget extends StatefulWidget {
   final Map<String, TextStyle> codeTheme;
 
   /// Language code
-  final String language;
+  final String codeLanguage;
 
   /// Whether to show the copy button on code blocks
-  final bool showCopyButton;
+  final bool showCodeCopyButton;
 
   /// Called when the copy button is triggered
   final void Function(String)? onCopyTrigger;
@@ -354,8 +354,8 @@ class _MarkdownWidgetState extends State<MarkdownWidget>
       onTapText: widget.onTapText,
       softLineBreak: widget.softLineBreak,
       codeTheme: widget.codeTheme,
-      language: widget.language,
-      showCopyButton: widget.showCopyButton,
+      codeLanguage: widget.codeLanguage,
+      showCodeCopyButton: widget.showCodeCopyButton,
       onCopyTrigger: widget.onCopyTrigger,
     );
 
@@ -435,8 +435,8 @@ class MarkdownBody extends MarkdownWidget {
     bool fitContent = true,
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
-    String language = 'dart',
-    bool showCopyButton = true,
+    String codeLanguage = 'dart',
+    bool showCodeCopyButton = true,
     ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
@@ -460,8 +460,8 @@ class MarkdownBody extends MarkdownWidget {
           fitContent: fitContent,
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
-          language: language,
-          showCopyButton: showCopyButton,
+          codeLanguage: codeLanguage,
+          showCodeCopyButton: showCodeCopyButton,
           onCopyTrigger: onCopyTrigger,
         );
 
@@ -523,8 +523,8 @@ class Markdown extends MarkdownWidget {
     this.shrinkWrap = false,
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
-    String language = 'dart',
-    bool showCopyButton = true,
+    String codeLanguage = 'dart',
+    bool showCodeCopyButton = true,
     ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
@@ -547,8 +547,8 @@ class Markdown extends MarkdownWidget {
           bulletBuilder: bulletBuilder,
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
-          language: language,
-          showCopyButton: showCopyButton,
+          codeLanguage: codeLanguage,
+          showCodeCopyButton: showCodeCopyButton,
           onCopyTrigger: onCopyTrigger,
         );
 
