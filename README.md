@@ -11,10 +11,18 @@ HTML.
 ```dart
 Markdown(
     controller: controller,
-    selectable: true,
-    data: 'Insert emoji here😀 ',
-    
+    codeLanguage: 'dart',
+    showCodeCopyButton: true,
+    codeTheme: gruvboxDarkTheme,
+    data: ''' 
+    ```dart
+      bool all<T>(Iterable<T> itr, bool Function(T) fn) {
+        return itr.every(fn);
+      }
+      ```
+    ''',
 )
+
 ```
 
 The [`flutter_markdown`](https://pub.dev/packages/flutter_markdown) package
