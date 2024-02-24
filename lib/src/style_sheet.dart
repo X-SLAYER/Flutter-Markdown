@@ -42,6 +42,7 @@ class MarkdownStyleSheet {
     this.tableColumnWidth,
     this.tableCellsPadding,
     this.tableCellsDecoration,
+    this.tableVerticalAlignment = TableCellVerticalAlignment.middle,
     this.blockquotePadding,
     this.blockquoteDecoration,
     this.codeblockPadding,
@@ -58,8 +59,19 @@ class MarkdownStyleSheet {
     this.orderedListAlign = WrapAlignment.start,
     this.blockquoteAlign = WrapAlignment.start,
     this.codeblockAlign = WrapAlignment.start,
-    this.textScaleFactor,
-  }) : _styles = <String, TextStyle?>{
+    @Deprecated('Use textScaler instead.') this.textScaleFactor,
+    TextScaler? textScaler,
+  })  : assert(
+          textScaler == null || textScaleFactor == null,
+          'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
+        ),
+        textScaler = textScaler ??
+            // Internally, only textScaler is used, so convert the scale factor
+            // to a linear scaler.
+            (textScaleFactor == null
+                ? null
+                : TextScaler.linear(textScaleFactor)),
+        _styles = <String, TextStyle?>{
           'a': a,
           'p': p,
           'li': p,
@@ -84,46 +96,45 @@ class MarkdownStyleSheet {
 
   /// Creates a [MarkdownStyleSheet] from the [TextStyle]s in the provided [ThemeData].
   factory MarkdownStyleSheet.fromTheme(ThemeData theme) {
-    assert(theme.textTheme.bodyText2?.fontSize != null);
+    assert(theme.textTheme.bodyMedium?.fontSize != null);
     return MarkdownStyleSheet(
       a: const TextStyle(color: Colors.blue),
-      p: theme.textTheme.bodyText2,
+      p: theme.textTheme.bodyMedium,
       pPadding: EdgeInsets.zero,
-      code: theme.textTheme.bodyText2!.copyWith(
+      code: theme.textTheme.bodyMedium!.copyWith(
         backgroundColor: theme.cardTheme.color ?? theme.cardColor,
         fontFamily: 'monospace',
-        fontSize: theme.textTheme.bodyText2!.fontSize! * 0.85,
+        fontSize: theme.textTheme.bodyMedium!.fontSize! * 0.85,
       ),
-      h1: theme.textTheme.headline5,
+      h1: theme.textTheme.headlineSmall,
       h1Padding: EdgeInsets.zero,
-      h2: theme.textTheme.headline6,
+      h2: theme.textTheme.titleLarge,
       h2Padding: EdgeInsets.zero,
-      h3: theme.textTheme.subtitle1,
+      h3: theme.textTheme.titleMedium,
       h3Padding: EdgeInsets.zero,
-      h4: theme.textTheme.bodyText1,
+      h4: theme.textTheme.bodyLarge,
       h4Padding: EdgeInsets.zero,
-      h5: theme.textTheme.bodyText1,
+      h5: theme.textTheme.bodyLarge,
       h5Padding: EdgeInsets.zero,
-      h6: theme.textTheme.bodyText1,
+      h6: theme.textTheme.bodyLarge,
       h6Padding: EdgeInsets.zero,
       em: const TextStyle(fontStyle: FontStyle.italic),
       strong: const TextStyle(fontWeight: FontWeight.bold),
       del: const TextStyle(decoration: TextDecoration.lineThrough),
-      blockquote: theme.textTheme.bodyText2,
-      img: theme.textTheme.bodyText2,
-      checkbox: theme.textTheme.bodyText2!.copyWith(
+      blockquote: theme.textTheme.bodyMedium,
+      img: theme.textTheme.bodyMedium,
+      checkbox: theme.textTheme.bodyMedium!.copyWith(
         color: theme.primaryColor,
       ),
       blockSpacing: 8.0,
       listIndent: 24.0,
-      listBullet: theme.textTheme.bodyText2,
+      listBullet: theme.textTheme.bodyMedium,
       listBulletPadding: const EdgeInsets.only(right: 4),
       tableHead: const TextStyle(fontWeight: FontWeight.w600),
-      tableBody: theme.textTheme.bodyText2,
+      tableBody: theme.textTheme.bodyMedium,
       tableHeadAlign: TextAlign.center,
       tableBorder: TableBorder.all(
         color: theme.dividerColor,
-        width: 1,
       ),
       tableColumnWidth: const FlexColumnWidth(),
       tableCellsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -253,7 +264,6 @@ class MarkdownStyleSheet {
             color: theme.brightness == Brightness.dark
                 ? CupertinoColors.systemGrey4.darkColor
                 : CupertinoColors.systemGrey4.color,
-            width: 1,
           ),
         ),
       ),
@@ -267,39 +277,39 @@ class MarkdownStyleSheet {
   factory MarkdownStyleSheet.largeFromTheme(ThemeData theme) {
     return MarkdownStyleSheet(
       a: const TextStyle(color: Colors.blue),
-      p: theme.textTheme.bodyText2,
+      p: theme.textTheme.bodyMedium,
       pPadding: EdgeInsets.zero,
-      code: theme.textTheme.bodyText2!.copyWith(
+      code: theme.textTheme.bodyMedium!.copyWith(
         backgroundColor: theme.cardTheme.color ?? theme.cardColor,
         fontFamily: 'monospace',
-        fontSize: theme.textTheme.bodyText2!.fontSize! * 0.85,
+        fontSize: theme.textTheme.bodyMedium!.fontSize! * 0.85,
       ),
-      h1: theme.textTheme.headline2,
+      h1: theme.textTheme.displayMedium,
       h1Padding: EdgeInsets.zero,
-      h2: theme.textTheme.headline3,
+      h2: theme.textTheme.displaySmall,
       h2Padding: EdgeInsets.zero,
-      h3: theme.textTheme.headline4,
+      h3: theme.textTheme.headlineMedium,
       h3Padding: EdgeInsets.zero,
-      h4: theme.textTheme.headline5,
+      h4: theme.textTheme.headlineSmall,
       h4Padding: EdgeInsets.zero,
-      h5: theme.textTheme.headline6,
+      h5: theme.textTheme.titleLarge,
       h5Padding: EdgeInsets.zero,
-      h6: theme.textTheme.subtitle1,
+      h6: theme.textTheme.titleMedium,
       h6Padding: EdgeInsets.zero,
       em: const TextStyle(fontStyle: FontStyle.italic),
       strong: const TextStyle(fontWeight: FontWeight.bold),
       del: const TextStyle(decoration: TextDecoration.lineThrough),
-      blockquote: theme.textTheme.bodyText2,
-      img: theme.textTheme.bodyText2,
-      checkbox: theme.textTheme.bodyText2!.copyWith(
+      blockquote: theme.textTheme.bodyMedium,
+      img: theme.textTheme.bodyMedium,
+      checkbox: theme.textTheme.bodyMedium!.copyWith(
         color: theme.primaryColor,
       ),
       blockSpacing: 8.0,
       listIndent: 24.0,
-      listBullet: theme.textTheme.bodyText2,
+      listBullet: theme.textTheme.bodyMedium,
       listBulletPadding: const EdgeInsets.only(right: 4),
       tableHead: const TextStyle(fontWeight: FontWeight.w600),
-      tableBody: theme.textTheme.bodyText2,
+      tableBody: theme.textTheme.bodyMedium,
       tableHeadAlign: TextAlign.center,
       tableBorder: TableBorder.all(
         color: theme.dividerColor,
@@ -364,6 +374,7 @@ class MarkdownStyleSheet {
     TableColumnWidth? tableColumnWidth,
     EdgeInsets? tableCellsPadding,
     Decoration? tableCellsDecoration,
+    TableCellVerticalAlignment? tableVerticalAlignment,
     EdgeInsets? blockquotePadding,
     Decoration? blockquoteDecoration,
     EdgeInsets? codeblockPadding,
@@ -380,8 +391,19 @@ class MarkdownStyleSheet {
     WrapAlignment? orderedListAlign,
     WrapAlignment? blockquoteAlign,
     WrapAlignment? codeblockAlign,
-    double? textScaleFactor,
+    @Deprecated('Use textScaler instead.') double? textScaleFactor,
+    TextScaler? textScaler,
   }) {
+    assert(
+      textScaler == null || textScaleFactor == null,
+      'textScaleFactor is deprecated and cannot be specified when textScaler is specified.',
+    );
+    // If either of textScaler or textScaleFactor is non-null, pass null for the
+    // other instead of the previous value, since only one is allowed.
+    final TextScaler? newTextScaler =
+        textScaler ?? (textScaleFactor == null ? this.textScaler : null);
+    final double? nextTextScaleFactor =
+        textScaleFactor ?? (textScaler == null ? this.textScaleFactor : null);
     return MarkdownStyleSheet(
       a: a ?? this.a,
       p: p ?? this.p,
@@ -416,6 +438,8 @@ class MarkdownStyleSheet {
       tableColumnWidth: tableColumnWidth ?? this.tableColumnWidth,
       tableCellsPadding: tableCellsPadding ?? this.tableCellsPadding,
       tableCellsDecoration: tableCellsDecoration ?? this.tableCellsDecoration,
+      tableVerticalAlignment:
+          tableVerticalAlignment ?? this.tableVerticalAlignment,
       blockquotePadding: blockquotePadding ?? this.blockquotePadding,
       blockquoteDecoration: blockquoteDecoration ?? this.blockquoteDecoration,
       codeblockPadding: codeblockPadding ?? this.codeblockPadding,
@@ -433,7 +457,8 @@ class MarkdownStyleSheet {
       orderedListAlign: orderedListAlign ?? this.orderedListAlign,
       blockquoteAlign: blockquoteAlign ?? this.blockquoteAlign,
       codeblockAlign: codeblockAlign ?? this.codeblockAlign,
-      textScaleFactor: textScaleFactor ?? this.textScaleFactor,
+      textScaler: newTextScaler,
+      textScaleFactor: nextTextScaleFactor,
     );
   }
 
@@ -477,6 +502,7 @@ class MarkdownStyleSheet {
       tableColumnWidth: other.tableColumnWidth,
       tableCellsPadding: other.tableCellsPadding,
       tableCellsDecoration: other.tableCellsDecoration,
+      tableVerticalAlignment: other.tableVerticalAlignment,
       blockquotePadding: other.blockquotePadding,
       blockquoteDecoration: other.blockquoteDecoration,
       codeblockPadding: other.codeblockPadding,
@@ -494,6 +520,11 @@ class MarkdownStyleSheet {
       blockquoteAlign: other.blockquoteAlign,
       codeblockAlign: other.codeblockAlign,
       textScaleFactor: other.textScaleFactor,
+      // Only one of textScaler and textScaleFactor can be passed. If
+      // other.textScaleFactor is non-null, then the sheet was created with a
+      // textScaleFactor and the textScaler was derived from that, so should be
+      // ignored so that the textScaleFactor continues to be set.
+      textScaler: other.textScaleFactor == null ? other.textScaler : null,
     );
   }
 
@@ -596,6 +627,9 @@ class MarkdownStyleSheet {
   /// The decoration to use for `th` and `td` elements.
   final Decoration? tableCellsDecoration;
 
+  /// The [TableCellVerticalAlignment] to use for `th` and `td` elements.
+  final TableCellVerticalAlignment tableVerticalAlignment;
+
   /// The padding to use for `blockquote` elements.
   final EdgeInsets? blockquotePadding;
 
@@ -644,7 +678,14 @@ class MarkdownStyleSheet {
   /// The [WrapAlignment] to use for a code block. Defaults to start.
   final WrapAlignment codeblockAlign;
 
-  /// The text scale factor to use in textual elements
+  /// The text scaler to use in textual elements.
+  final TextScaler? textScaler;
+
+  /// The text scale factor to use in textual elements.
+  ///
+  /// This will be non-null only if the sheet was created with the deprecated
+  /// [textScaleFactor] instead of [textScaler].
+  @Deprecated('Use textScaler instead.')
   final double? textScaleFactor;
 
   /// A [Map] from element name to the corresponding [TextStyle] object.
@@ -653,64 +694,65 @@ class MarkdownStyleSheet {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) {
       return true;
     }
     if (other.runtimeType != MarkdownStyleSheet) {
       return false;
     }
-    final MarkdownStyleSheet typedOther = other;
-    return typedOther.a == a &&
-        typedOther.p == p &&
-        typedOther.pPadding == pPadding &&
-        typedOther.code == code &&
-        typedOther.h1 == h1 &&
-        typedOther.h1Padding == h1Padding &&
-        typedOther.h2 == h2 &&
-        typedOther.h2Padding == h2Padding &&
-        typedOther.h3 == h3 &&
-        typedOther.h3Padding == h3Padding &&
-        typedOther.h4 == h4 &&
-        typedOther.h4Padding == h4Padding &&
-        typedOther.h5 == h5 &&
-        typedOther.h5Padding == h5Padding &&
-        typedOther.h6 == h6 &&
-        typedOther.h6Padding == h6Padding &&
-        typedOther.em == em &&
-        typedOther.strong == strong &&
-        typedOther.del == del &&
-        typedOther.blockquote == blockquote &&
-        typedOther.img == img &&
-        typedOther.checkbox == checkbox &&
-        typedOther.blockSpacing == blockSpacing &&
-        typedOther.listIndent == listIndent &&
-        typedOther.listBullet == listBullet &&
-        typedOther.listBulletPadding == listBulletPadding &&
-        typedOther.tableHead == tableHead &&
-        typedOther.tableBody == tableBody &&
-        typedOther.tableHeadAlign == tableHeadAlign &&
-        typedOther.tableBorder == tableBorder &&
-        typedOther.tableColumnWidth == tableColumnWidth &&
-        typedOther.tableCellsPadding == tableCellsPadding &&
-        typedOther.tableCellsDecoration == tableCellsDecoration &&
-        typedOther.blockquotePadding == blockquotePadding &&
-        typedOther.blockquoteDecoration == blockquoteDecoration &&
-        typedOther.codeblockPadding == codeblockPadding &&
-        typedOther.codeblockDecoration == codeblockDecoration &&
-        typedOther.horizontalRuleDecoration == horizontalRuleDecoration &&
-        typedOther.textAlign == textAlign &&
-        typedOther.h1Align == h1Align &&
-        typedOther.h2Align == h2Align &&
-        typedOther.h3Align == h3Align &&
-        typedOther.h4Align == h4Align &&
-        typedOther.h5Align == h5Align &&
-        typedOther.h6Align == h6Align &&
-        typedOther.unorderedListAlign == unorderedListAlign &&
-        typedOther.orderedListAlign == orderedListAlign &&
-        typedOther.blockquoteAlign == blockquoteAlign &&
-        typedOther.codeblockAlign == codeblockAlign &&
-        typedOther.textScaleFactor == textScaleFactor;
+    return other is MarkdownStyleSheet &&
+        other.a == a &&
+        other.p == p &&
+        other.pPadding == pPadding &&
+        other.code == code &&
+        other.h1 == h1 &&
+        other.h1Padding == h1Padding &&
+        other.h2 == h2 &&
+        other.h2Padding == h2Padding &&
+        other.h3 == h3 &&
+        other.h3Padding == h3Padding &&
+        other.h4 == h4 &&
+        other.h4Padding == h4Padding &&
+        other.h5 == h5 &&
+        other.h5Padding == h5Padding &&
+        other.h6 == h6 &&
+        other.h6Padding == h6Padding &&
+        other.em == em &&
+        other.strong == strong &&
+        other.del == del &&
+        other.blockquote == blockquote &&
+        other.img == img &&
+        other.checkbox == checkbox &&
+        other.blockSpacing == blockSpacing &&
+        other.listIndent == listIndent &&
+        other.listBullet == listBullet &&
+        other.listBulletPadding == listBulletPadding &&
+        other.tableHead == tableHead &&
+        other.tableBody == tableBody &&
+        other.tableHeadAlign == tableHeadAlign &&
+        other.tableBorder == tableBorder &&
+        other.tableColumnWidth == tableColumnWidth &&
+        other.tableCellsPadding == tableCellsPadding &&
+        other.tableCellsDecoration == tableCellsDecoration &&
+        other.tableVerticalAlignment == tableVerticalAlignment &&
+        other.blockquotePadding == blockquotePadding &&
+        other.blockquoteDecoration == blockquoteDecoration &&
+        other.codeblockPadding == codeblockPadding &&
+        other.codeblockDecoration == codeblockDecoration &&
+        other.horizontalRuleDecoration == horizontalRuleDecoration &&
+        other.textAlign == textAlign &&
+        other.h1Align == h1Align &&
+        other.h2Align == h2Align &&
+        other.h3Align == h3Align &&
+        other.h4Align == h4Align &&
+        other.h5Align == h5Align &&
+        other.h6Align == h6Align &&
+        other.unorderedListAlign == unorderedListAlign &&
+        other.orderedListAlign == orderedListAlign &&
+        other.blockquoteAlign == blockquoteAlign &&
+        other.codeblockAlign == codeblockAlign &&
+        other.textScaler == textScaler;
   }
 
   @override
@@ -750,6 +792,7 @@ class MarkdownStyleSheet {
       tableColumnWidth,
       tableCellsPadding,
       tableCellsDecoration,
+      tableVerticalAlignment,
       blockquotePadding,
       blockquoteDecoration,
       codeblockPadding,
@@ -766,6 +809,7 @@ class MarkdownStyleSheet {
       orderedListAlign,
       blockquoteAlign,
       codeblockAlign,
+      textScaler,
       textScaleFactor,
     ]);
   }

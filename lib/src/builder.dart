@@ -4,6 +4,7 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -336,11 +337,21 @@ class MarkdownBuilder implements md.NodeVisitor {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: styleSheet.codeblockPadding,
-          child: HighlightView(
-            text.text,
-            language: language,
-            padding: styleSheet.codeblockPadding,
-            theme: codeTheme,
+          child: Stack(
+            children: [
+              HighlightView(
+                text.text,
+                language: language,
+                padding: styleSheet.codeblockPadding,
+                theme: codeTheme,
+              ),
+              IconButton(
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: text.text));
+                },
+                icon: Icon(Icons.copy),
+              ),
+            ],
           ),
         ),
       );
@@ -498,7 +509,7 @@ class MarkdownBuilder implements md.NodeVisitor {
           _mergeInlineChildren(current.children, align),
           textAlign: align,
         );
-        _tables.single.rows.last.children!.add(child);
+        _tables.single.rows.last.children.add(child);
       } else if (tag == 'a') {
         _linkHandlers.removeLast();
       }
@@ -843,7 +854,7 @@ class MarkdownBuilder implements md.NodeVisitor {
     } else {
       return RichText(
         text: text!,
-        textScaleFactor: styleSheet.textScaleFactor!,
+        textScaleFactor: styleSheet.textScaleFactor ?? 1.0,
         textAlign: textAlign ?? TextAlign.start,
         key: k,
       );
