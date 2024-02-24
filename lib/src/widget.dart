@@ -171,6 +171,8 @@ abstract class MarkdownWidget extends StatefulWidget {
     this.softLineBreak = false,
     this.codeTheme = githubTheme,
     this.language = 'language',
+    this.showCopyButton = true,
+    this.onCopyTrigger,
   }) : super(key: key);
 
   /// The Markdown to display.
@@ -230,6 +232,12 @@ abstract class MarkdownWidget extends StatefulWidget {
 
   /// Language code
   final String language;
+
+  /// Whether to show the copy button on code blocks
+  final bool showCopyButton;
+
+  /// Called when the copy button is triggered
+  final void Function(String)? onCopyTrigger;
 
   /// Render certain tags, usually used with [extensionSet]
   ///
@@ -347,6 +355,8 @@ class _MarkdownWidgetState extends State<MarkdownWidget>
       softLineBreak: widget.softLineBreak,
       codeTheme: widget.codeTheme,
       language: widget.language,
+      showCopyButton: widget.showCopyButton,
+      onCopyTrigger: widget.onCopyTrigger,
     );
 
     _children = builder.build(astNodes);
@@ -426,6 +436,8 @@ class MarkdownBody extends MarkdownWidget {
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
     String language = 'dart',
+    bool showCopyButton = true,
+    ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
           data: data,
@@ -449,6 +461,8 @@ class MarkdownBody extends MarkdownWidget {
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
           language: language,
+          showCopyButton: showCopyButton,
+          onCopyTrigger: onCopyTrigger,
         );
 
   /// If [shrinkWrap] is `true`, [MarkdownBody] will take the minimum height
@@ -510,6 +524,8 @@ class Markdown extends MarkdownWidget {
     bool softLineBreak = false,
     Map<String, TextStyle> codeTheme = githubTheme,
     String language = 'dart',
+    bool showCopyButton = true,
+    ValueChanged<String>? onCopyTrigger,
   }) : super(
           key: key,
           data: data,
@@ -532,6 +548,8 @@ class Markdown extends MarkdownWidget {
           softLineBreak: softLineBreak,
           codeTheme: codeTheme,
           language: language,
+          showCopyButton: showCopyButton,
+          onCopyTrigger: onCopyTrigger,
         );
 
   /// The amount of space by which to inset the children.
